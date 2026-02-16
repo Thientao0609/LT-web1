@@ -1,5 +1,6 @@
 package lab1.project.service;
 
+import lab1.project.dto.GradeResult;
 import lab1.project.entity.GradeScale;
 import lab1.project.entity.StudentGrade;
 import lab1.project.repository.GradeScaleRepository;
@@ -20,7 +21,9 @@ public class GradeService {
         this.gradeScaleRepository = gradeScaleRepository;
     }
 
-    // tính điểm tổng
+    // ==============================
+    // 1. Tính điểm tổng theo trọng số
+    // ==============================
     public double calculateTotal(Long studentId) {
         List<StudentGrade> grades = studentGradeRepository.findByStudentId(studentId);
 
@@ -31,14 +34,26 @@ public class GradeService {
         return total;
     }
 
-    // đổi sang điểm chữ
+    // ==============================
+    // 2. Đổi điểm số -> điểm chữ
+    // ==============================
     public String convertToLetter(double total) {
         List<GradeScale> scales = gradeScaleRepository.findAll();
+
         for (GradeScale s : scales) {
             if (total >= s.getMinScore() && total <= s.getMaxScore()) {
                 return s.getLetter();
             }
         }
         return "N/A";
+    }
+
+    // ==============================
+    // 3. Lấy kết quả hoàn chỉnh
+    // ==============================
+    public GradeResult getStudentResult(Long studentId) {
+        double total = calculateTotal(studentId);
+        String letter = convertToLetter(total);
+        return new GradeResult(total, letter);
     }
 }
