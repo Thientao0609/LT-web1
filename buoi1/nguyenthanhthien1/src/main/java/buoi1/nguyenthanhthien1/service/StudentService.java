@@ -1,9 +1,7 @@
 package buoi1.nguyenthanhthien1.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 import buoi1.nguyenthanhthien1.model.Student;
 import buoi1.nguyenthanhthien1.repository.StudentRepository;
@@ -11,22 +9,34 @@ import buoi1.nguyenthanhthien1.repository.StudentRepository;
 @Service
 public class StudentService {
 
-   @Autowired
-    private StudentRepository repo;
+    private final StudentRepository studentRepository;
 
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
+
+    // Lấy tất cả
     public List<Student> getAllStudents() {
-        return repo.findAll();
+        return studentRepository.findAll();
     }
 
+    // Tìm theo tên
     public List<Student> searchByName(String keyword) {
-        return repo.findByNameContainingIgnoreCase(keyword);
+        return studentRepository.findByNameContainingIgnoreCase(keyword);
     }
 
+    // Thêm hoặc sửa
     public Student save(Student student) {
-        return repo.save(student);
+        return studentRepository.save(student);
     }
 
+    // Xóa
     public void deleteById(Integer id) {
-        repo.deleteById(id);
+        studentRepository.deleteById(id);
+    }
+
+    // Lấy theo ID
+    public Student getById(Integer id) {
+        return studentRepository.findById(id).orElse(null);
     }
 }

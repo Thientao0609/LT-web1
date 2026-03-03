@@ -1,54 +1,55 @@
 package buoi1.nguyenthanhthien1.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import buoi1.nguyenthanhthien1.model.Student;
 import buoi1.nguyenthanhthien1.service.StudentService;
 
-@RestController
-@RequestMapping("/api/students")
-@CrossOrigin(origins = "*") // cho phép gọi từ HTML/JS
+@Controller
+@RequestMapping("/students")
 public class StudentController {
 
-    @Autowired
-    private StudentService studentService;
+    private final StudentService service;
 
-    // 📌 LẤY DANH SÁCH + TÌM KIẾM
+    public StudentController(StudentService service) {
+        this.service = service;
+    }
+
+    // Hiển thị danh sách
     @GetMapping
-    public List<Student> getStudents(
-            @RequestParam(required = false) String keyword) {
-
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            return studentService.searchByName(keyword);
-        }
-        return studentService.getAllStudents();
+    public String list(Model model) {
+        model.addAttribute("students", service.getAllStudents());
+        return "students";
     }
 
-    // 📌 THÊM MỚI
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Student addStudent(@RequestBody Student student) {
-        return studentService.save(student);
+    // Mở form thêm
+    @GetMapping("/add")
+    public String addForm(Model model) {
+        model.addAttribute("student", new Student());
+        return "form";
     }
 
-    // 📌 CẬP NHẬT
-    @PutMapping("/{id}")
-    public Student updateStudent(
-            @PathVariable Integer id,
-            @RequestBody Student student) {
-
-        student.setId(id);
-        return studentService.save(student);
+    // Mở form sửa
+    @GetMapping("/edit/{id}")
+    public String editForm(@PathVariable Integer id, Model model) {
+        Student student = service.getById(id);
+        model.addAttribute("student", student);
+        return "form";
     }
 
-    // 📌 XÓA
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteStudent(@PathVariable Integer id) {
-        studentService.deleteById(id);
+    // Lưu (thêm + sửa)
+    @PostMapping("/save")
+    public String save(@ModelAttribute Student student) {
+        service.save(student);
+        return "redirect:/students";
+    }
+
+    // Xóa
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Integer id) {
+        service.deleteById(id);
+        return "redirect:/students";
     }
 }

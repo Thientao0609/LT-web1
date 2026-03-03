@@ -3,23 +3,19 @@ package buoi1.nguyenthanhthien1.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "students")
+@Table(name = "student") // phải đúng tên bảng trong SQL
 public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "age")
     private Integer age;
-
-    @Column(name = "email")
     private String email;
 
-    // ===== getter & setter =====
+    public Student() {}
+
     public Integer getId() {
         return id;
     }
