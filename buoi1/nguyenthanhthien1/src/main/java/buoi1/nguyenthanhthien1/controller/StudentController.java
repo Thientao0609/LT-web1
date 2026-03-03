@@ -17,14 +17,16 @@ public class StudentController {
         this.service = service;
     }
 
-    // Hiển thị danh sách
+    // HIỂN THỊ DANH SÁCH (Sửa tại đây)
     @GetMapping
     public String list(Model model) {
         model.addAttribute("students", service.getAllStudents());
+        // Thêm dòng này để Form thêm nhanh ở trang students.html không bị lỗi
+        model.addAttribute("student", new Student()); 
         return "students";
     }
 
-    // Mở form thêm
+    // Mở form thêm (Trang riêng)
     @GetMapping("/add")
     public String addForm(Model model) {
         model.addAttribute("student", new Student());
@@ -41,7 +43,7 @@ public class StudentController {
 
     // Lưu (thêm + sửa)
     @PostMapping("/save")
-    public String save(@ModelAttribute Student student) {
+    public String save(@ModelAttribute("student") Student student) {
         service.save(student);
         return "redirect:/students";
     }
