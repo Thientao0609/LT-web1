@@ -27,7 +27,14 @@
 
     <hr>
 
-    <h2>Danh sách sinh viên</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Danh sách sinh viên</h2>
+        <form th:action="@{/students}" method="get" class="d-flex gap-2">
+            <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Tìm kiếm theo tên...">
+            <button type="submit" class="btn btn-outline-secondary">Tìm</button>
+            <a th:href="@{/students}" class="btn btn-link">Xóa tìm kiếm</a>
+        </form>
+    </div>
     <table class="table table-striped table-hover mt-3">
         <thead class="table-dark">
             <tr>

@@ -17,11 +17,15 @@ public class StudentController {
         this.service = service;
     }
 
-    // HIỂN THỊ DANH SÁCH (Sửa tại đây)
+    // HIỂN THỊ DANH SÁCH + TÌM KIẾM
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("students", service.getAllStudents());
-        // Thêm dòng này để Form thêm nhanh ở trang students.html không bị lỗi
+    public String list(@RequestParam(value = "keyword", required = false) String keyword, Model model) {
+        if (keyword != null && !keyword.isEmpty()) {
+            model.addAttribute("students", service.searchByName(keyword));
+            model.addAttribute("keyword", keyword);
+        } else {
+            model.addAttribute("students", service.getAllStudents());
+        }
         model.addAttribute("student", new Student()); 
         return "students";
     }
